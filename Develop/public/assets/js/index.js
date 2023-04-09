@@ -49,7 +49,7 @@ const deleteNote = (id) =>
       'Content-Type': 'application/json',
     },
   });
-
+ 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
@@ -179,5 +179,6 @@ if (window.location.pathname === '/notes') {
   noteTitle.addEventListener('keyup', handleRenderSaveBtn);
   noteText.addEventListener('keyup', handleRenderSaveBtn);
 }
+
 
 getAndRenderNotes();
