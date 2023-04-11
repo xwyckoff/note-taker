@@ -14,7 +14,7 @@ app.get('/notes', (req, res) => {
 
 app.post('/notes', (req, res) => {
     //start by reading the contents of the db.json file
-    fs.readFile('../db/db.json', 'utf-8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
         if(err) {
             console.log(err);
         }
@@ -23,9 +23,15 @@ app.post('/notes', (req, res) => {
             //set a variable to the list of notes in the db.json file
             let notesList = JSON.parse(data)
             //add the note sent by the user to the list
-            notesList.push(req.body);
+            notesList.push(
+                {
+                    //generate a unique id for the new note
+                    id: uuidv4(),
+                    title: req.body.title,
+                    text: req.body.text
+                });
             //write the list to the db.json file
-            fs.writeFile('../db/db.json', JSON.stringify(notesList), (err) => {
+            fs.writeFile('./db/db.json', JSON.stringify(notesList), (err) => {
                 if(err) {
                     console.warn(err)
                 } else {
@@ -34,6 +40,34 @@ app.post('/notes', (req, res) => {
             });
 
             res.json("Note received!");
+        }
+    })
+});
+
+app.delete('/notes/:id', (req, res) => {
+    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+        if (err) console.log(err);
+
+        else {
+            let notesList = JSON.parse(data);
+            let noteID = req.params['id'];
+
+            //loop through the array and find the id of the note that is in the parameters of the route
+            for(let i = 0; i < notesList.length; i++) {
+                //if the note is found, remove that note from the array
+                if (notesList[i].id == noteID) {
+                    notesList.splice(i, 1);
+                    break;
+                }
+            }
+
+            fs.writeFile('./db/db.json', JSON.stringify(notesList), err => {
+                if (err) console.log(err);
+
+                else {
+                    console.info(`Note of ID ${req.params['id']} deleted.`);
+                }
+            })
         }
     })
 });
