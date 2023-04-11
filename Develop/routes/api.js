@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express.Router();
 const fs = require('fs');
+const path = require('path');
 const db = require('../db/db.json');
 const {v4: uuidv4} = require('uuid');
 
@@ -9,7 +10,9 @@ app.use(express.json());
 
 app.get('/notes', (req, res) => {
     //send the user all of the notes
-    res.json(db);
+    res.header("Content-Type", "application/json");
+    res.sendFile(path.join(__dirname, "../db/db.json"));
+    console.info("Request for json file");
 });
 
 app.post('/notes', (req, res) => {
