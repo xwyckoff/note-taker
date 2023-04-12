@@ -12,7 +12,6 @@ app.get('/notes', (req, res) => {
     //send the user all of the notes
     res.header("Content-Type", "application/json");
     res.sendFile(path.join(__dirname, "../db/db.json"));
-    console.info("Request for json file");
 });
 
 app.post('/notes', (req, res) => {
@@ -68,7 +67,7 @@ app.delete('/notes/:id', (req, res) => {
                 if (err) console.log(err);
 
                 else {
-                    console.info(`Note of ID ${req.params['id']} deleted.`);
+                    res.json({ message: `Note of ID ${req.params['id']} deleted.` });
                 }
             })
         }
